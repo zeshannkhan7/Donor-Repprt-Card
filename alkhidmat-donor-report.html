@@ -207,14 +207,18 @@
   .message-label { font-size: 11px; color: #C8A44A; letter-spacing: 2px; font-family: sans-serif; margin-bottom: 8px; }
   .message-text { font-size: 14px; line-height: 1.75; color: rgba(255,255,255,0.92); font-family: Georgia, serif; }
 
-  .donor-tag { margin: 14px 20px 0; text-align: center; }
-  .donor-tag span {
-    display: inline-block; padding: 8px 24px;
-    background: linear-gradient(to right, #C8A44A, #f5d98b, #C8A44A);
-    border-radius: 30px; color: #0d47a1;
-    font-weight: bold; font-size: 14px;
-    font-family: sans-serif; letter-spacing: 1px;
+
+
+  .sender-section {
+    margin: 14px 20px 0;
+    padding: 14px 22px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 10px;
+    border-left: 3px solid #C8A44A;
   }
+  .sender-label { font-size: 10px; color: #C8A44A; letter-spacing: 2px; font-family: sans-serif; margin-bottom: 4px; }
+  .sender-name { font-size: 15px; color: #fff; font-family: Georgia, serif; font-weight: bold; }
+  .sender-org { font-size: 11px; color: rgba(255,255,255,0.6); font-family: sans-serif; margin-top: 2px; }
 
   .card-footer { padding: 16px 28px 20px; text-align: center; }
   .footer-text { font-size: 12px; color: rgba(255,255,255,0.6); font-family: sans-serif; margin-top: 8px; line-height: 1.6; }
@@ -259,13 +263,16 @@
 
     <span class="field-label">SACRIFICE TYPE</span>
     <div class="animal-row">
-      <button class="animal-btn active" id="btn-cow" onclick="selectAnimal('cow')">🐄 Cow</button>
-      <button class="animal-btn" id="btn-goat" onclick="selectAnimal('goat')">🐐 Goat</button>
-      <button class="animal-btn" id="btn-both" onclick="selectAnimal('both')">🐄🐐 Both</button>
+      <button class="animal-btn active" id="btn-cow" onclick="selectAnimal('cow')">Cow</button>
+      <button class="animal-btn" id="btn-goat" onclick="selectAnimal('goat')">Goat</button>
+      <button class="animal-btn" id="btn-both" onclick="selectAnimal('both')">Both</button>
     </div>
 
     <span class="field-label">ADDITIONAL NOTE (optional)</span>
     <textarea class="textarea-input" id="custom-note" rows="3" placeholder="e.g. Meat distributed in Lahore, 20 families served..."></textarea>
+
+    <span class="field-label">SENT BY (your name / team)</span>
+    <input type="text" class="text-input" id="sender-name" placeholder="e.g. Zeshann Khan / Islamabad Team"/>
 
     <button class="gen-btn" id="gen-btn" onclick="generateReport()" disabled>✦ Generate Donor Report Card</button>
     <div class="gen-hint" id="gen-hint">Upload all 4 photos to enable generation</div>
@@ -369,9 +376,9 @@ function generateNote(donorName, animalLabel, customNote) {
   ];
 
   const middle = [
-    `By the grace of Allah (SWT), your generous sacrifice of a ${animal} on this blessed Eid ul Adha has been completed with great care and sincerity. The meat has been distributed to deserving and needy families${customNote ? ' in ' + customNote : ''}, bringing smiles and warmth to their homes on this joyous occasion.`,
-    `Alhamdulillah, through your noble generosity, the ${animal} sacrifice you entrusted to us has been carried out in accordance with Islamic principles. The blessed meat has reached the hands of less fortunate families${customNote ? ' — ' + customNote : ''}, fulfilling the beautiful spirit of Qurbani.`,
-    `All praise is due to Allah (SWT) — your ${animal} sacrifice has been performed with utmost care and devotion. Thanks to your kindness, deserving families${customNote ? ' (' + customNote + ')' : ''} have received their share of this blessed meat, allowing them to celebrate Eid ul Adha with joy and dignity.`
+    `By the grace of Allah (SWT), your generous sacrifice of a ${animal} for Qurbani 2026 has been completed with great care and sincerity. The meat has been distributed to deserving and needy families${customNote ? ' in ' + customNote : ''}, bringing smiles and warmth to their homes on this joyous occasion.`,
+    `Alhamdulillah, through your noble generosity, the ${animal} sacrifice you entrusted to us for Qurbani 2026 has been carried out with full care. The blessed meat has reached less fortunate families${customNote ? ' — ' + customNote : ''}, fulfilling the beautiful spirit of Qurbani.`,
+    `All praise is due to Allah (SWT) — your ${animal} sacrifice for Qurbani 2026 has been performed with utmost care. Thanks to your generosity, deserving families${customNote ? ' (' + customNote + ')' : ''} have received their share of this blessed meat, allowing them to celebrate this blessed occasion with joy and dignity.`
   ];
 
   const closings = [
@@ -392,10 +399,11 @@ function generateReport() {
 
   showLoading();
 
+  const senderName = document.getElementById('sender-name').value.trim() || 'Alkhidmat Team';
   // Small delay to show loading animation
   setTimeout(() => {
     const note = generateNote(donorName, animalLabel, customNote);
-    renderCard(donorName, animalLabel, note);
+    renderCard(donorName, animalLabel, note, senderName);
   }, 900);
 }
 
@@ -418,11 +426,7 @@ function showPlaceholder() {
   `;
 }
 
-function animalIcon(a) {
-  return a === 'Cow' ? '🐄' : a === 'Goat' ? '🐐' : '🐄🐐';
-}
-
-function renderCard(donorName, animalLabel, note) {
+function renderCard(donorName, animalLabel, note, senderName) {
   const photoGridHTML = photos.map(src =>
     `<div class="photo-cell"><img src="${src}" crossorigin="anonymous"/></div>`
   ).join('');
@@ -446,7 +450,7 @@ function renderCard(donorName, animalLabel, note) {
       <img src="${LOGO_B64}" alt="Alkhidmat Logo" crossorigin="anonymous"/>
       <div>
         <div class="org-name">ALKHIDMAT</div>
-        <div class="org-sub">FOUNDATION PAKISTAN</div>
+        <div class="org-sub">FOUNDATION ISLAMABAD</div>
       </div>
     </div>
     <div class="bismillah">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
@@ -457,8 +461,8 @@ function renderCard(donorName, animalLabel, note) {
       <span class="star-sym" style="font-size:16px">✦</span>
       <div class="star-line right"></div>
     </div>
-    <div class="eid-title">EID UL ADHA SACRIFICE REPORT ${animalIcon(animalLabel)}</div>
-    <div class="eid-sub">${animalLabel} Sacrifice — Delivered to the Needy</div>
+    <div class="eid-title">QURBANI 2026 — SACRIFICE REPORT</div>
+    <div class="eid-sub">Qurbani Meat — Delivered to the Needy</div>
   </div>
   <div class="photo-grid-wrap">
     <div class="photo-grid">${photoGridHTML}</div>
@@ -467,7 +471,11 @@ function renderCard(donorName, animalLabel, note) {
     <div class="message-label">DEAR RESPECTED DONOR</div>
     <div class="message-text">${note}</div>
   </div>
-  <div class="donor-tag"><span>${donorName}</span></div>
+  <div class="sender-section">
+    <div class="sender-label">REGARDS</div>
+    <div class="sender-name">${senderName}</div>
+    <div class="sender-org">Alkhidmat Foundation Islamabad</div>
+  </div>
   <div class="card-footer">
     <div class="star-divider">
       <div class="star-line left"></div>
@@ -477,7 +485,7 @@ function renderCard(donorName, animalLabel, note) {
       <div class="star-line right"></div>
     </div>
     <div class="footer-text">
-      Alkhidmat Foundation Pakistan · Serving Humanity Since 1990<br/>
+      Alkhidmat Foundation Islamabad · Serving Humanity Since 1990<br/>
       <span class="footer-link">www.alkhidmat.org</span>
     </div>
   </div>
@@ -567,6 +575,7 @@ function newReport() {
   updateUploadUI();
   document.getElementById('donor-name').value = '';
   document.getElementById('custom-note').value = '';
+  document.getElementById('sender-name').value = '';
   selectAnimal('cow');
   showPlaceholder();
 }
