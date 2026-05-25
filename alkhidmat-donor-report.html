@@ -183,29 +183,26 @@
   .photo-grid-wrap { padding: 0 20px 14px; }
   .photo-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
     gap: 6px;
     border-radius: 12px;
     overflow: hidden;
     border: 2px solid #C8A44A;
     box-shadow: 0 4px 24px rgba(0,0,0,0.18);
-    background: #000;
-    aspect-ratio: 4/3;
-    max-height: 320px;
+    background: #111;
   }
-  .photo-grid .photo-cell { overflow: hidden; }
-  .photo-grid .photo-cell img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .photo-grid .photo-cell { overflow: hidden; background: #111; }
+  .photo-grid .photo-cell img { width: 100%; height: 100%; object-fit: contain; display: block; background: #111; }
 
   .message-box {
     margin: 0 20px;
-    padding: 18px 22px;
+    padding: 14px 22px;
     background: rgba(255,255,255,0.09);
     border-radius: 12px;
     border: 1px solid rgba(200,164,74,0.35);
+    text-align: center;
   }
   .message-label { font-size: 11px; color: #C8A44A; letter-spacing: 2px; font-family: sans-serif; margin-bottom: 8px; }
-  .message-text { font-size: 14px; line-height: 1.75; color: rgba(255,255,255,0.92); font-family: Georgia, serif; }
+  .message-text { font-size: 13px; line-height: 1.65; color: rgba(255,255,255,0.92); font-family: Georgia, serif; text-align: center; }
 
 
 
@@ -214,11 +211,12 @@
     padding: 14px 22px;
     background: rgba(255,255,255,0.07);
     border-radius: 10px;
-    border-left: 3px solid #C8A44A;
+    border: 1px solid rgba(200,164,74,0.3);
+    text-align: center;
   }
   .sender-label { font-size: 10px; color: #C8A44A; letter-spacing: 2px; font-family: sans-serif; margin-bottom: 4px; }
-  .sender-name { font-size: 15px; color: #fff; font-family: Georgia, serif; font-weight: bold; }
-  .sender-org { font-size: 11px; color: rgba(255,255,255,0.6); font-family: sans-serif; margin-top: 2px; }
+  .sender-name { font-size: 15px; color: #fff; font-family: Georgia, serif; font-weight: bold; text-align: center; }
+  .sender-org { font-size: 11px; color: rgba(255,255,255,0.6); font-family: sans-serif; margin-top: 2px; text-align: center; }
 
   .card-footer { padding: 16px 28px 20px; text-align: center; }
   .footer-text { font-size: 12px; color: rgba(255,255,255,0.6); font-family: sans-serif; margin-top: 8px; line-height: 1.6; }
@@ -367,28 +365,15 @@ function selectAnimal(a) {
 // GENERATE
 function generateNote(donorName, animalLabel, customNote) {
   const animal = animalLabel === 'Cow' ? 'cow' : animalLabel === 'Goat' ? 'goat' : 'cow and goat';
-  const animalPlural = animalLabel === 'Cow' ? 'cows' : animalLabel === 'Goat' ? 'goats' : 'cows and goats';
 
-  const openings = [
-    `Assalamu Alaikum, dear <strong>${donorName}</strong>.`,
-    `Assalamu Alaikum wa Rahmatullahi wa Barakatuh, respected <strong>${donorName}</strong>.`,
-    `Assalamu Alaikum, our dear and respected <strong>${donorName}</strong>.`
-  ];
-
-  const middle = [
-    `By the grace of Allah (SWT), your generous sacrifice of a ${animal} for Qurbani 2026 has been completed with great care and sincerity. The meat has been distributed to deserving and needy families${customNote ? ' in ' + customNote : ''}, bringing smiles and warmth to their homes on this joyous occasion.`,
-    `Alhamdulillah, through your noble generosity, the ${animal} sacrifice you entrusted to us for Qurbani 2026 has been carried out with full care. The blessed meat has reached less fortunate families${customNote ? ' — ' + customNote : ''}, fulfilling the beautiful spirit of Qurbani.`,
-    `All praise is due to Allah (SWT) — your ${animal} sacrifice for Qurbani 2026 has been performed with utmost care. Thanks to your generosity, deserving families${customNote ? ' (' + customNote + ')' : ''} have received their share of this blessed meat, allowing them to celebrate this blessed occasion with joy and dignity.`
-  ];
-
-  const closings = [
-    `May Allah accept your Qurbani, multiply your rewards manifold, and shower you and your family with His choicest blessings in this world and the Hereafter. Alkhidmat Foundation is deeply grateful for your continued trust and support in our mission to serve humanity.`,
-    `We humbly pray that Allah (SWT) accepts your sacrifice, blesses your wealth, health, and family, and keeps you among those who give generously in His path. Jazak Allahu Khayran — may your reward be with Allah, the Most Generous.`,
-    `May Allah Ta'ala reward you abundantly, accept your Qurbani as an act of worship, and grant barakah in your life, family, and sustenance. The Alkhidmat family thanks you from the depths of our hearts for being a source of light for those in need.`
+  const notes = [
+    `Assalamu Alaikum, dear <strong>${donorName}</strong>. Alhamdulillah, your ${animal} Qurbani 2026 has been completed${customNote ? ' in ' + customNote : ''}. May Allah accept it and bless you abundantly. Jazak Allahu Khayran!`,
+    `Assalamu Alaikum, dear <strong>${donorName}</strong>. Your ${animal} sacrifice for Qurbani 2026 has been carried out and the meat delivered to needy families${customNote ? ' — ' + customNote : ''}. May Allah reward you greatly. Ameen!`,
+    `Assalamu Alaikum, dear <strong>${donorName}</strong>. Your generous ${animal} Qurbani 2026 has been fulfilled${customNote ? ' (' + customNote + ')' : ''}. The meat has reached deserving families. May Allah accept your sacrifice and shower His blessings upon you!`
   ];
 
   const r = (arr) => arr[Math.floor(Math.random() * arr.length)];
-  return r(openings) + ' ' + r(middle) + ' ' + r(closings);
+  return r(notes);
 }
 
 function generateReport() {
@@ -427,9 +412,11 @@ function showPlaceholder() {
 }
 
 function renderCard(donorName, animalLabel, note, senderName) {
-  const photoGridHTML = photos.map(src =>
-    `<div class="photo-cell"><img src="${src}" crossorigin="anonymous"/></div>`
-  ).join('');
+  const count = photos.length;
+  const cols = count === 1 ? '1fr' : '1fr 1fr';
+  const photoGridHTML = `<div class="photo-grid" style="grid-template-columns:${cols}">` +
+    photos.map(src => `<div class="photo-cell" style="min-height:180px"><img src="${src}" crossorigin="anonymous"/></div>`).join('') +
+    `</div>`;
 
   const cardHTML = `
 <div id="donor-card">
@@ -464,11 +451,8 @@ function renderCard(donorName, animalLabel, note, senderName) {
     <div class="eid-title">QURBANI 2026 — SACRIFICE REPORT</div>
     <div class="eid-sub">Qurbani Meat — Delivered to the Needy</div>
   </div>
-  <div class="photo-grid-wrap">
-    <div class="photo-grid">${photoGridHTML}</div>
-  </div>
+  <div class="photo-grid-wrap">${photoGridHTML}</div>
   <div class="message-box">
-    <div class="message-label">DEAR RESPECTED DONOR</div>
     <div class="message-text">${note}</div>
   </div>
   <div class="sender-section">
